@@ -1,0 +1,83 @@
+openapi: 3.0.0
+info:
+  title: Payment Aggregator
+  version: '1.0'
+  description: API specification for integrating mysf stores to payment aggregator
+  contact:
+    name: Lutfi
+    email: lutfi.kamaludin@smartfren.com
+servers:
+  - url: 'http://10.16.9.18:8080'
+    description: staging
+paths:
+  /payment-aggr/mysf/payment:
+    post:
+      tags:
+        - mysf
+        - pay-aggr
+      responses:
+        '200':
+          description: OK
+      description: Submit payment with mysf connector specification
+      operationId: payment-aggr-001
+      parameters:
+        - schema:
+            type: string
+            default: mysf-1.0
+          in: header
+          name: X-Version
+          description: ''
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                store:
+                  $ref: '#/components/schemas/stores'
+                order:
+                  type: string
+                payment:
+                  type: string
+            examples:
+              example-1: {}
+components:
+  schemas:
+    stores:
+      title: stores
+      type: object
+      properties:
+        code:
+          type: string
+        terminalId:
+          type: string
+        mallId:
+          type: string
+      x-examples:
+        sample:
+          value:
+            code: MYSF
+            terminalId: Android
+            mallId: PULSA
+    amount:
+      title: amount
+      type: object
+      x-examples:
+        sample:
+          value:
+            currency: IDR
+            value: 1000
+      properties:
+        currency:
+          type: string
+          default: IDR
+          enum:
+            - IDR
+        value:
+          type: number
+          minimum: 1000
+          maximum: 999999999
+      required:
+        - currency
+        - value
